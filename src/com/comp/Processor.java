@@ -10,35 +10,34 @@ public class Processor extends Component {
     public Processor(){}
 
     public Processor(String n, int[] s, int c, double t){
-        name = n;
+        super(n,t);
         S = s;
         current = c;
-        ta = t;
     }
 
-    public static double get_tr(){
+    public double get_tr(){
         if (current == 1){
-            tr = Double.POSITIVE_INFINITY;
+            ta = Double.POSITIVE_INFINITY;
         }
         else if (current == 2){
-            tr = 1;
+            ta = 1;
         }
-        return tr;
+        return ta;
     }
 
-    public static void intern(){
+    public void intern(){
         if (current == 2){
             current = 1;
         }
     }
 
-    public static void extern(Event ev){
+    public void extern(Event ev){
         if ((current == 1) && (ev.get("req"))){
             current = 2;
         }
     }
 
-    public static double time(){
+    public double time(){
         if (current == 1){
             return Double.POSITIVE_INFINITY;
         }
@@ -48,9 +47,13 @@ public class Processor extends Component {
         return 0.;
     }
 
-    public static void output(Event ev){
+    public void output(Event ev){
         if(current == 2){
             current = 1;
         }
+    }
+
+    public String get_name(){
+        return name;
     }
 }

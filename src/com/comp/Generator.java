@@ -10,32 +10,35 @@ public class Generator extends Component {
     public Generator(){}
 
     public Generator(String n, int[] s, int c, double t){
-        name = n;
+        super(n,t);
         S = s;
         current = c;
-        ta = t;
     }
 
-    public static double get_tr(){
+    public double get_tr(){
         if (current == 1){
-            tr = 2;
+            ta = 2;
         }
-        return tr;
-    }
-
-    public static void intern(){
-        return ;
-    }
-
-    public static void extern(Event ev){
-        return ;
-    }
-
-    public static double time(){
         return ta;
     }
 
-    public static void output(Event ev){
+    public void intern(){
+        return ;
+    }
+
+    public void extern(Event ev){
+        return ;
+    }
+
+    public double time(){
+        return ta;
+    }
+
+    public void output(Event ev){
         ev.set("job",Boolean.TRUE);
+    }
+
+    public String get_name(){
+        return name;
     }
 }

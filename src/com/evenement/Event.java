@@ -1,12 +1,13 @@
 package com.evenement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Event {
 
     //Attributes
-    private static List name;
-    private static List value;
+    private static List<String> name = new ArrayList<String>();
+    private static List<Boolean> value = new ArrayList<Boolean>();
 
     //Functions
     public Event() {}
