@@ -5,7 +5,7 @@ import com.evenement.Event;
 public class Buffer extends Component {
 
     //Attributes
-    private static int q = 0;
+    private int q = 0;
 
     //Functions
     public Buffer(){}
@@ -16,39 +16,35 @@ public class Buffer extends Component {
         current = c;
     }
 
-    public double get_tr(){
-        if (current == 1){
-            ta = Double.POSITIVE_INFINITY;
-        }
-        else if (current == 2){
-            ta = 0;
-        }
-        else if (current == 3){
-            ta = Double.POSITIVE_INFINITY;
-        }
-        return ta;
-    }
-
-    public void intern(){
+    public void intern(Event ev){
+        //System.out.print("Je suis passé ici !\n");
         if(current == 2){
+            //System.out.print("Je repasse par la !\n");
             q--;
             current = 3;
+            tn = tl + Double.POSITIVE_INFINITY;
         }
     }
 
     public void extern(Event ev){
+        //System.out.print("Je suis la ma couille \n");
         if ((current == 1) && (ev.get("job"))){
             q++;
             current = 2;
+            tn = tl + 0;
+            ev.set("job",Boolean.FALSE);
         }
         else if ((current == 3) && (ev.get("job"))){
             q++;
+            ev.set("job",Boolean.FALSE);
         }
         else if ((current == 3) && (q>0) && (ev.get("done"))){
             current = 2;
+            tn = tl + 0;
         }
         else if ((current == 3) && (q == 0) && (ev.get("done"))){
             current = 1;
+            tn = tl + Double.POSITIVE_INFINITY;
         }
     }
 
@@ -61,15 +57,34 @@ public class Buffer extends Component {
 
     public void output(Event ev){
         if(current == 2){
-            ev.set("get",Boolean.TRUE);
+            ev.set("req",Boolean.TRUE);
         }
     }
 
-    public static int get_q(){
+    public void conflict(Event ev){
+        if (ev.get("done")){
+            extern(ev);
+        }
+        else {
+            intern(ev);
+
+        }
+    }
+
+    public int get_q(){
         return q;
     }
 
     public String get_name(){
         return name;
+    }
+
+    public void set_tr(Double t){
+        if((current == 1) || (current == 3)){
+            tr = Double.POSITIVE_INFINITY;
+        }
+        else if(current == 2){
+            tr = 0;
+        }
     }
 }

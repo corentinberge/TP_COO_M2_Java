@@ -15,25 +15,17 @@ public class Processor extends Component {
         current = c;
     }
 
-    public double get_tr(){
-        if (current == 1){
-            ta = Double.POSITIVE_INFINITY;
-        }
-        else if (current == 2){
-            ta = 1;
-        }
-        return ta;
-    }
-
-    public void intern(){
+    public void intern(Event ev){
         if (current == 2){
             current = 1;
+            tn = tl + Double.POSITIVE_INFINITY;
         }
     }
 
     public void extern(Event ev){
         if ((current == 1) && (ev.get("req"))){
             current = 2;
+            tn = e + 1;
         }
     }
 
@@ -50,10 +42,24 @@ public class Processor extends Component {
     public void output(Event ev){
         if(current == 2){
             current = 1;
+            tn = tl +  Double.POSITIVE_INFINITY;
         }
+    }
+
+    public void conflict(Event ev){
+        return;
     }
 
     public String get_name(){
         return name;
+    }
+
+    public void set_tr(Double t){
+        if(current == 1){
+            tr = Double.POSITIVE_INFINITY;
+        }
+        else if(current == 2){
+            tr = 1;
+        }
     }
 }

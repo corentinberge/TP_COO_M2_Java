@@ -14,29 +14,25 @@ public abstract class Component {
     protected double ta;
     protected double e;
     protected double tr;
-    private double tl = 0;
-    private double tn;
+    protected double tl = 0;
+    protected double tn;
 
     //Functions
     public Component() {}
 
     public Component(String n,double t){
         name = n;
-        ta = t;
+        e = 0;
         tn = t;
-        e = t;
+        ta = tn - tl;
         tr = ta - e;
-        tn = t + tr;
     }
-
 
     public void set_e(double E){
         e = E;
     }
 
-    public void set_tr(){
-        tr = ta - e;
-    }
+
 
     public void set_tn(){
         if(e>=tn){
@@ -50,15 +46,29 @@ public abstract class Component {
         }
     }
 
+    public Double get_tn(){
+        return tn;
+    }
+
+    public int get_current(){
+        return current;
+    }
+
+    public double get_tr(){
+        return tr;
+    }
+
+    abstract public void set_tr(Double t);
+
     abstract public String get_name();
 
-    abstract public void intern();
+    abstract public void intern(Event ev);
 
     abstract public void extern(Event ev);
-
-    abstract public double get_tr();
 
     abstract public void output(Event ev);
 
     abstract public double time();
+
+    abstract public void conflict(Event ev);
 }

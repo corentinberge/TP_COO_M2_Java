@@ -15,14 +15,7 @@ public class Generator extends Component {
         current = c;
     }
 
-    public double get_tr(){
-        if (current == 1){
-            ta = 2;
-        }
-        return ta;
-    }
-
-    public void intern(){
+    public void intern(Event ev){
         return ;
     }
 
@@ -40,5 +33,14 @@ public class Generator extends Component {
 
     public String get_name(){
         return name;
+    }
+
+    public void conflict(Event ev){
+        return;
+    }
+
+    public void set_tr(Double t){
+        set_tn();
+        tr = tn - t;
     }
 }
