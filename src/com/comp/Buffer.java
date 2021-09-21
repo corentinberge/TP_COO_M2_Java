@@ -68,12 +68,7 @@ public class Buffer extends Component {
         return q;
     }
 
-    public String get_name(){
-        return name;
-    }
-
     public void set_tr(Double t){
-        old_tr = tr;
         if((current == 1) || (current == 3)){
             tr = Double.POSITIVE_INFINITY;
         }

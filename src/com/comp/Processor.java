@@ -66,7 +66,6 @@ public class Processor extends Component {
     }
 
     public void set_tr(Double t){
-        old_tr = tr;
         if(current == 1){
             tr = Double.POSITIVE_INFINITY;
         }

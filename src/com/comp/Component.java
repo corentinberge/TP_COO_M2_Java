@@ -14,7 +14,6 @@ public abstract class Component {
     protected double ta;
     protected double e;
     protected double tr;
-    protected double old_tr;
     protected double tl = 0;
     protected double tn;
 
@@ -58,13 +57,12 @@ public abstract class Component {
         return tr;
     }
 
-    public double get_oldtr(){
-        return old_tr;
+    public String get_name(){
+        return name;
     }
 
     abstract public void set_tr(Double t);
 
-    abstract public String get_name();
 
     abstract public void intern(Event ev);
 

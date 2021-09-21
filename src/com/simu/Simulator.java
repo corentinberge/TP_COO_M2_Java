@@ -1,9 +1,6 @@
 package com.simu;
 
-import com.comp.Buffer;
-import com.comp.Component;
-import com.comp.Generator;
-import com.comp.Processor;
+import com.comp.*;
 import com.evenement.Event;
 
 import java.util.ArrayList;
@@ -15,6 +12,8 @@ public class Simulator {
     private double t = 0;
     private double t_fin;
     private double tr_min;
+    private double ts_min;
+    private double old_ts;
 
     //Functions
     public Simulator() {}
@@ -140,6 +139,59 @@ public class Simulator {
         System.out.print("\ng : " + g.get_current());
         System.out.print("\np : " + p.get_current());
         System.out.print("\n\n");
+    }
+
+    public void consigne(){
+
+        //Initialisation
+        Step step1 = new Step("step1",1.,-3.,0.65);
+        Step step2 = new Step("step2",0.,1.,0.35);
+        Step step3 = new Step("step3",0.,1.,1.);
+        Step step4 = new Step("step4",0.,4.,1.5);
+
+        List<Step> stp = new ArrayList<Step>();
+        stp.add(0,step1);stp.add(0,step2);stp.add(0,step3);stp.add(0,step4);
+
+        Adder ad = new Adder(stp);
+
+        System.out.print("Temps : " + t + "\n");
+        System.out.print("Somme : " + ad.get_sum() + "\n\n");
+
+        while(t<t_fin) {
+            //Local variable
+            List<Double> p = new ArrayList<Double>();
+
+            //Stocking the minimum time response
+            for(int i = 0;i<stp.size();i++){
+                if(t < stp.get(i).get_ts()){
+                    p.add(stp.get(i).get_ts());
+                }
+            }
+
+            if(p.size() == 0){
+                break;
+            }
+
+            for(int i = 0;i<p.size();i++){
+                if(i == 0){
+                    ts_min = p.get(i);
+                }
+                else{
+                    ts_min = Double.min(ts_min,p.get(i));
+                }
+            }
+
+            t = ts_min;
+
+            for(int i = 0;i<stp.size();i++){
+                if (ts_min == stp.get(i).get_ts()){
+                    ad.add(stp.get(i).sw(t));
+                }
+            }
+
+            System.out.print("Temps : " + t + "\n");
+            System.out.print("Somme : " + ad.get_sum() + "\n\n");
+        }
     }
 }
 
