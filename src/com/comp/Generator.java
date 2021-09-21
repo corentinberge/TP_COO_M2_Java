@@ -40,7 +40,7 @@ public class Generator extends Component {
     }
 
     public void set_tr(Double t){
-        set_tn();
+        old_tr = tr;
         tr = tn - t;
     }
 }

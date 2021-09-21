@@ -72,7 +72,6 @@ public class Simulator {
 
             //Making the output function for imms (lambda)
             for(int i = 0;i<imms.size();i++){
-                //System.out.print("Je suis passé par la, je suis : " + imms.get(i).get_name() + "\n");
                 imms.get(i).output(ev);
             }
 
@@ -101,38 +100,42 @@ public class Simulator {
                 }
                 if(in_imms && !in_ins){
                     Comp.get(i).intern(ev);
+                    Comp.get(i).set_tl();
+                    Comp.get(i).set_tn();
                     Comp.get(i).set_tr(t);
                     Comp.get(i).set_e(t);
-                    Comp.get(i).set_tn();
-                    Comp.get(i).set_tl();
                 }
                 else if(!in_imms && in_ins){
                     Comp.get(i).extern(ev);
+                    Comp.get(i).set_tl();
+                    Comp.get(i).set_tn();
                     Comp.get(i).set_tr(t);
                     Comp.get(i).set_e(t);
-                    Comp.get(i).set_tn();
-                    Comp.get(i).set_tl();
                 }
                 else if(in_imms && in_ins){
                     Comp.get(i).conflict(ev);
                     System.out.print(Comp.get(i).get_name() + "\n");
+                    Comp.get(i).set_tl();
+                    Comp.get(i).set_tn();
                     Comp.get(i).set_tr(t);
                     Comp.get(i).set_e(t);
-                    Comp.get(i).set_tn();
-                    Comp.get(i).set_tl();
                 }
             }
-
             afficheur_ordo(b,g,p,ev);
+            ev.reset();
         }
     }
 
     public void afficheur_ordo(Buffer b,Generator g,Processor p, Event ev){
         System.out.print("t = " + t);
         System.out.print("\nq = " + b.get_q());
-        System.out.print("\ndone|" + p.get_tr() + " - " + ev.get("done"));
+        if(p.get_current() == 2){
+            System.out.print("\ndone|" + p.get_tr() + " - " + ev.get("done"));
+        }
         System.out.print("\njob|" + g.get_tr() + " - " + ev.get("job"));
-        System.out.print("\nreq|" + b.get_tr() + " - " + ev.get("req"));
+        if(b.get_current() == 2){
+            System.out.print("\nreq|" + b.get_tr() + " - " + ev.get("req"));
+        }
         System.out.print("\nb : " + b.get_current());
         System.out.print("\ng : " + g.get_current());
         System.out.print("\np : " + p.get_current());

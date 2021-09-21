@@ -27,25 +27,23 @@ public class Buffer extends Component {
     }
 
     public void extern(Event ev){
-        //System.out.print("Je suis la ma couille \n");
         if ((current == 1) && (ev.get("job"))){
             q++;
             current = 2;
             tn = tl + 0;
-            ev.set("job",Boolean.FALSE);
         }
         else if ((current == 3) && (ev.get("job"))){
             q++;
-            ev.set("job",Boolean.FALSE);
-        }
-        else if ((current == 3) && (q>0) && (ev.get("done"))){
-            current = 2;
-            tn = tl + 0;
         }
         else if ((current == 3) && (q == 0) && (ev.get("done"))){
             current = 1;
             tn = tl + Double.POSITIVE_INFINITY;
         }
+        else if ((current == 3) && (q>0) && (ev.get("done"))){
+            current = 2;
+            tn = tl + 0;
+        }
+
     }
 
     public double time(){
@@ -62,13 +60,8 @@ public class Buffer extends Component {
     }
 
     public void conflict(Event ev){
-        if (ev.get("done")){
-            extern(ev);
-        }
-        else {
-            intern(ev);
-
-        }
+        extern(ev);
+        intern(ev);
     }
 
     public int get_q(){
@@ -80,6 +73,7 @@ public class Buffer extends Component {
     }
 
     public void set_tr(Double t){
+        old_tr = tr;
         if((current == 1) || (current == 3)){
             tr = Double.POSITIVE_INFINITY;
         }

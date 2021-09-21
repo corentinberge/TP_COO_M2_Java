@@ -14,6 +14,7 @@ public abstract class Component {
     protected double ta;
     protected double e;
     protected double tr;
+    protected double old_tr;
     protected double tl = 0;
     protected double tn;
 
@@ -31,7 +32,6 @@ public abstract class Component {
     public void set_e(double E){
         e = E;
     }
-
 
 
     public void set_tn(){
@@ -56,6 +56,10 @@ public abstract class Component {
 
     public double get_tr(){
         return tr;
+    }
+
+    public double get_oldtr(){
+        return old_tr;
     }
 
     abstract public void set_tr(Double t);

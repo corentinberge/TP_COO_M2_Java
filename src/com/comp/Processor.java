@@ -6,6 +6,9 @@ import java.util.List;
 
 public class Processor extends Component {
 
+    //Attributes
+    private int c = 0;
+
     //Functions
     public Processor(){}
 
@@ -43,11 +46,19 @@ public class Processor extends Component {
         if(current == 2){
             current = 1;
             tn = tl +  Double.POSITIVE_INFINITY;
+            ev.set("done",Boolean.TRUE);
         }
     }
 
     public void conflict(Event ev){
-        return;
+        if (c == 0){
+            extern(ev);
+            c++;
+        }
+        else{
+            intern(ev);
+            c--;
+        }
     }
 
     public String get_name(){
@@ -55,6 +66,7 @@ public class Processor extends Component {
     }
 
     public void set_tr(Double t){
+        old_tr = tr;
         if(current == 1){
             tr = Double.POSITIVE_INFINITY;
         }
