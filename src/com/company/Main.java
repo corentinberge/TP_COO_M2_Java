@@ -17,6 +17,8 @@ public class Main {
 
         //s.ordonnanceur();
 
-        s.consigne();
+        //s.consigne();
+
+        s.integrate();
     }
 }

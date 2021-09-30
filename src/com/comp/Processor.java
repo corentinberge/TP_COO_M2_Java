@@ -2,8 +2,6 @@ package com.comp;
 
 import com.evenement.Event;
 
-import java.util.List;
-
 public class Processor extends Component {
 
     //Attributes
@@ -16,19 +14,20 @@ public class Processor extends Component {
         super(n,t);
         S = s;
         current = c;
+        ta = 3;
     }
 
     public void intern(Event ev){
         if (current == 2){
             current = 1;
-            tn = tl + Double.POSITIVE_INFINITY;
+            tn = e + Double.POSITIVE_INFINITY;
         }
     }
 
     public void extern(Event ev){
-        if ((current == 1) && (ev.get("req"))){
+        if ((current == 1) && (ev.get_str("req"))){
             current = 2;
-            tn = e + 1;
+            tn = e + ta;
         }
     }
 
@@ -37,7 +36,7 @@ public class Processor extends Component {
             return Double.POSITIVE_INFINITY;
         }
         else if (current == 2){
-            return ta;
+            return tr;
         }
         return 0.;
     }
@@ -45,7 +44,7 @@ public class Processor extends Component {
     public void output(Event ev){
         if(current == 2){
             current = 1;
-            tn = tl +  Double.POSITIVE_INFINITY;
+            tn = e +  Double.POSITIVE_INFINITY;
             ev.set("done",Boolean.TRUE);
         }
     }
@@ -70,7 +69,7 @@ public class Processor extends Component {
             tr = Double.POSITIVE_INFINITY;
         }
         else if(current == 2){
-            tr = 1;
+            tr = tn - t;
         }
     }
 }

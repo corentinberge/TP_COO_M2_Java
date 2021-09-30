@@ -63,7 +63,6 @@ public abstract class Component {
 
     abstract public void set_tr(Double t);
 
-
     abstract public void intern(Event ev);
 
     abstract public void extern(Event ev);

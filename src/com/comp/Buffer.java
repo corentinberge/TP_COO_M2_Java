@@ -14,6 +14,7 @@ public class Buffer extends Component {
         super(n,t);
         S = s;
         current = c;
+        ta = 0;
     }
 
     public void intern(Event ev){
@@ -22,26 +23,26 @@ public class Buffer extends Component {
             //System.out.print("Je repasse par la !\n");
             q--;
             current = 3;
-            tn = tl + Double.POSITIVE_INFINITY;
+            tn = e + Double.POSITIVE_INFINITY;
         }
     }
 
     public void extern(Event ev){
-        if ((current == 1) && (ev.get("job"))){
+        if ((current == 1) && (ev.get_str("job"))){
             q++;
             current = 2;
-            tn = tl + 0;
+            tn = e + ta;
         }
-        else if ((current == 3) && (ev.get("job"))){
-            q++;
-        }
-        else if ((current == 3) && (q == 0) && (ev.get("done"))){
+        else if ((current == 3) && (q == 0) && (ev.get_str("done"))){
             current = 1;
-            tn = tl + Double.POSITIVE_INFINITY;
+            tn = e + Double.POSITIVE_INFINITY;
         }
-        else if ((current == 3) && (q>0) && (ev.get("done"))){
+        else if ((current == 3) && (q>0) && (ev.get_str("done"))){
             current = 2;
-            tn = tl + 0;
+            tn = e + ta;
+        }
+        else if ((current == 3) && (ev.get_str("job"))){
+            q++;
         }
 
     }
@@ -73,7 +74,7 @@ public class Buffer extends Component {
             tr = Double.POSITIVE_INFINITY;
         }
         else if(current == 2){
-            tr = 0;
+            tr = tn - t;
         }
     }
 }

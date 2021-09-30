@@ -13,6 +13,7 @@ public class Generator extends Component {
         super(n,t);
         S = s;
         current = c;
+        ta = 2;
     }
 
     public void intern(Event ev){
