@@ -264,8 +264,6 @@ public class Simulator {
             System.out.print("T : "+ t +"\t Sum : " + ad.get_sum() + "\n\n");
             Sum.addDataToSeries(t,ad.get_sum());
             ev.reset();
-
-
         }
     }
 
@@ -273,62 +271,56 @@ public class Simulator {
 
         //Initialisation
         List<Component> Comp = new ArrayList<Component>();
-        Double res;
-        Step step1 = new Step("step1", 1., -3., 0.65);
-        Step step2 = new Step("step2", 0., 1., 0.35);
-        Step step3 = new Step("step3", 0., 1., 1.);
-        Step step4 = new Step("step4", 0., 4., 1.5);
+        Double res;Double X_t;
+        Step step1 = new Step("step1",1.,-3.,0.65);
+        Step step2 = new Step("step2",0.,1.,0.35);
+        Step step3 = new Step("step3",0.,1.,1.);
+        Step step4 = new Step("step4",0.,4.,1.5);
 
         int[] list_A;
-        list_A = new int[2];
-        list_A[0] = 1;
-        list_A[1] = 2;
+        list_A = new int[2];list_A[0] = 1;list_A[1] = 2;
 
         List<Step> stp = new ArrayList<Step>();
-        stp.add(0, step1);
-        stp.add(0, step2);
-        stp.add(0, step3);
-        stp.add(0, step4);
+        stp.add(0,step1);stp.add(0,step2);stp.add(0,step3);stp.add(0,step4);
 
-        Adder ad = new Adder("Ad", list_A, 1, Double.POSITIVE_INFINITY);
+        Adder ad = new Adder("Ad",list_A,1,Double.POSITIVE_INFINITY);
 
         Event ev = new Event();
-        ev.add("Adder", Boolean.FALSE);
-        ev.add("step1", Boolean.FALSE);
-        ev.add("step2", Boolean.FALSE);
-        ev.add("step3", Boolean.FALSE);
-        ev.add("step4", Boolean.FALSE);
+        ev.add("Adder",Boolean.FALSE);
+        ev.add("step1",Boolean.FALSE);
+        ev.add("step2",Boolean.FALSE);
+        ev.add("step3",Boolean.FALSE);
+        ev.add("step4",Boolean.FALSE);
         ev.add("Derivative",Boolean.FALSE);
 
-        ChartFrame cf = new ChartFrame("Résultat", "Somme");
+        ChartFrame cf = new ChartFrame("Résultat","Intégrator");
+        Chart Sum = new Chart("Sum");
+        cf.addToLineChartPane(Sum);
         Chart X = new Chart("X");
         cf.addToLineChartPane(X);
 
         ad.init(stp);
-        ad.output(ev);
+        res = ad.get_sum();
+        Sum.addDataToSeries(t,res);
 
-        Integrator I = new Integrator("Integrator",list_A,1,0.05,ad.get_sum());
+        Integrator I = new Integrator("I",list_A,1,0.01,ad.get_sum());
+        X.addDataToSeries(t,I.get_X());
 
-        Comp.add(0, step1);
-        Comp.add(1, step2);
-        Comp.add(2, step3);
-        Comp.add(3, step4);
-        Comp.add(4, ad);
-        Comp.add(5,I);
+        Comp.add(0,step1);Comp.add(1,step2);Comp.add(2,step3);Comp.add(3,step4);Comp.add(4,ad);Comp.add(5,I);
 
         //System.out.print("Sum : " + ad.get_sum() + "\n\n");
 
-        while (t < 2) {
+        while(t<2){
             //Local variable
             List<Component> imms = new ArrayList<Component>();
             List<Component> ins = new ArrayList<Component>();
 
             //Stocking the minimum time response
-            tr_min = Double.min(I.get_tr(),Double.min(ad.get_tr(), Double.min(step1.get_tr(), Double.min(step2.get_tr(), Double.min(step3.get_tr(), step4.get_tr())))));
+            tr_min = Double.min(ad.get_tr(),Double.min(step1.get_tr(),Double.min(step2.get_tr(),Double.min(step3.get_tr(),Double.min(I.get_tr(),step4.get_tr())))));
 
-            for (int i = 0; i < Comp.size(); i++) {
-                if (Comp.get(i).get_tr() == tr_min) {
-                    imms.add(imms.size(), Comp.get(i));
+            for(int i = 0;i<Comp.size();i++){
+                if(Comp.get(i).get_tr() == tr_min){
+                    imms.add(imms.size(),Comp.get(i));
                 }
             }
 
@@ -336,58 +328,60 @@ public class Simulator {
             t = t + tr_min;
 
             //Setting minimum time for all component
-            for (int i = 0; i < Comp.size(); i++) {
+            for(int i = 0;i<Comp.size();i++){
                 Comp.get(i).set_e(t);
-                Comp.get(i).set_tr(t);
+                Comp.get(i).set_tr(tr_min);
             }
 
             //Making the output function for imms (lambda)
-            for (int i = 0; i < imms.size(); i++) {
+            for(int i = 0;i<imms.size();i++){
                 imms.get(i).output(ev);
             }
 
             //Adding component who can change with output
-            if (ev.get_str("step1")) {
-                ins.add(ins.size(), ad);
+            if(ev.get_str("step1")){
+                ins.add(ins.size(),ad);
             }
-            if (ev.get_str("step2")) {
-                ins.add(ins.size(), ad);
+            if(ev.get_str("step2")){
+                ins.add(ins.size(),ad);
             }
-            if (ev.get_str("step3")) {
-                ins.add(ins.size(), ad);
+            if(ev.get_str("step3")){
+                ins.add(ins.size(),ad);
             }
-            if (ev.get_str("step4")) {
-                ins.add(ins.size(), ad);
+            if(ev.get_str("step4")){
+                ins.add(ins.size(),ad);
             }
-            if (ev.get_str("Derivative")){
+            if(ev.get_str("Derivative")){
                 ins.add(ins.size(),I);
             }
 
-            for (int i = 0; i < Comp.size(); i++) {
-                Boolean in_imms = Boolean.FALSE, in_ins = Boolean.FALSE;
-                for (int j = 0; j < imms.size(); j++) {
-                    if (Comp.get(i).get_name().equals(imms.get(j).get_name())) {
+            for(int i = 0;i<Comp.size();i++){
+                Boolean in_imms=Boolean.FALSE,in_ins=Boolean.FALSE;
+                for(int j = 0;j<imms.size();j++){
+                    if(Comp.get(i).get_name().equals(imms.get(j).get_name())){
                         in_imms = Boolean.TRUE;
                     }
                 }
-                for (int j = 0; j < ins.size(); j++) {
-                    if (Comp.get(i).get_name().equals(ins.get(j).get_name())) {
+                for(int j = 0;j<ins.size();j++){
+                    if(Comp.get(i).get_name().equals(ins.get(j).get_name())){
                         in_ins = Boolean.TRUE;
                     }
                 }
-                if (in_imms && !in_ins) {
+                if(in_imms && !in_ins){
                     Comp.get(i).intern(ev);
                     Comp.get(i).set_tl();
                     Comp.get(i).set_tn();
                     Comp.get(i).set_tr(t);
                     Comp.get(i).set_e(t);
-                } else if (!in_imms && in_ins) {
+                }
+                else if(!in_imms && in_ins){
                     Comp.get(i).extern(ev);
                     Comp.get(i).set_tl();
                     Comp.get(i).set_tn();
                     Comp.get(i).set_tr(t);
                     Comp.get(i).set_e(t);
-                } else if (in_imms && in_ins) {
+                }
+                else if(in_imms && in_ins){
                     Comp.get(i).conflict(ev);
                     Comp.get(i).set_tl();
                     Comp.get(i).set_tn();
@@ -395,13 +389,13 @@ public class Simulator {
                     Comp.get(i).set_e(t);
                 }
             }
-            System.out.print("T : " + t + "\t Sum : " + ad.get_sum() + "\tStep : " + I.get_step() + "\n\n");
+            //System.out.print("T : "+ t +"\t Sum : " + ad.get_sum() + "\t X : " + I.get_X() + "\t coef : " + I.get_coef() + "\n\n");
+            Sum.addDataToSeries(t,ad.get_sum());
             X.addDataToSeries(t,I.get_X());
-            ev.reset();
-
-
+            //ev.reset();
         }
     }
+
 }
 
 

@@ -4,74 +4,76 @@ import com.evenement.Event;
 
 public class Integrator extends Component{
 
-    //Attributes
-    private Double step;
-    private Double X;
+    private double step = 0.01;
+    private double X;
+    private double coef;
 
-    //Functions
-    public Integrator(){}
+    public Integrator(){};
 
     public Integrator(String n, int[] s, int c, double t, double x){
         name = n;
         S = s;
-        current = c;
+        current = 1;
         tr = t;
         ta = t;
         tn = t;
-        tl = 0.;
         e = 0.;
-        step = t;
+        tl = 0.;
         X = x;
-    }
-
-    public double get_step(){
-        return step;
+        coef = x;
     }
 
     public void set_tr(Double t) {
-        if (current == 1){
-            tr = t + step;
+        if(current == 1){
+            tr += step;
         }
-        tr = t;
+        else if(current == 2){
+            tr = 0.;
+        }
     }
 
     public void intern(Event ev) {
         if(current == 1){
+            X += step*coef;
+            //System.out.print("I : instant " + e + " le couple x,c = " + X + "," + coef + "\n");
             current = 2;
-            X += e*ev.val("Derivative");
         }
         else if (current == 2){
             current = 1;
+            return;
         }
     }
 
     public void extern(Event ev) {
-        if((current == 1) && (ev.get_str("Derivative"))){
-            X += e*ev.val("Derivative");
+        if ((current == 1) && (ev.get_str("Derivative"))) {
+            coef = ev.val("Derivative");
+            X += step*coef;
+            //System.out.print("E : instant " + e + " le couple x,c = " + X + "," + coef + "\n");
             current = 2;
+            ev.set("Derivative",Boolean.FALSE);
         }
     }
 
     public void output(Event ev) {
         if (current == 2){
-            //ev.transmit("Derivative",X);
+            ev.transmit("X",X);
         }
     }
 
     public double time() {
         if(current == 1){
-            return step;
+            return tr;
         }
         return 0.;
+    }
+
+    public void conflict(Event ev) {
+        return;
     }
 
     public double get_X(){
         return X;
     }
 
-    public void conflict(Event ev) {
-        extern(ev);
-        return;
-    }
-
+    public double get_coef(){return coef;}
 }

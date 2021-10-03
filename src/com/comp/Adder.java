@@ -33,16 +33,13 @@ public class Adder extends Component{
         if(current == 1){
             tr = Double.POSITIVE_INFINITY;
         }
-        else if(current == 2){
-            tr = 0.;
-        }
     }
 
     public void intern(Event ev) {
         if((current == 1)&&(ev.get_str("Adder"))){
             sum += ev.val("Adder");
-            ev.transmit("Derivative",sum);
-            //current = 2;
+            //ev.transmit("Derivative",sum);
+            //System.out.print("Sum : " + sum + "\n");
         }
     }
 
@@ -50,7 +47,8 @@ public class Adder extends Component{
         if((current == 1)&&(ev.get_str("Adder"))){
             sum += ev.val("Adder");
             ev.transmit("Derivative",sum);
-            //current = 2;
+            System.out.print("Sum2 : " + sum + "\n");
+            ev.set("Adder",Boolean.FALSE);
         }
     }
 

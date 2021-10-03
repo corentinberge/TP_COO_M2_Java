@@ -23,6 +23,7 @@ public class Event {
         for(int i = 0;i<name.size();i++){
             if(n.equals(name.get(i))){
                 TF.set(i,v);
+                //System.out.print("name : " + n + "\n");
             }
         }
     }
@@ -32,6 +33,7 @@ public class Event {
             if(n.equals(name.get(i))){
                 TF.set(i,Boolean.TRUE);
                 value.set(i,d);
+                //System.out.print("d : " + d + "\tname : " + n + "\n\n");
             }
         }
     }
@@ -52,7 +54,7 @@ public class Event {
     public void reset(){
         for(int i = 0;i<size();i++){
             TF.set(i,Boolean.FALSE);
-            value.set(i,0.);
+            //value.set(i,0.);
         }
     }
 
