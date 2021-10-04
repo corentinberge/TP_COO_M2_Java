@@ -19,6 +19,12 @@ public class Main {
 
         //s.consigne();
 
-        s.integrate();
+        //s.integrate();
+
+        //s.integrate_discrete();
+
+        //s.ODE();
+
+        s.BB();
     }
 }

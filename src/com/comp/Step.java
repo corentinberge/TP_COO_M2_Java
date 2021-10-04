@@ -36,7 +36,6 @@ public class Step extends Component{
     public void intern(Event ev) {
         if(current == 1){
             current = 2;
-            ev.transmit("Adder",xf);
         }
         return;
     }
@@ -46,13 +45,7 @@ public class Step extends Component{
     }
 
     public void output(Event ev){
-        if(current == 1){
-            ev.transmit(name,xi);
-        }
-        else if (current == 2){
-            ev.transmit(name,xf);
-        }
-        return;
+        ev.transmit(name,xf);
     }
 
     public double time() {

@@ -19,7 +19,7 @@ public class Integrator extends Component{
         tn = t;
         e = 0.;
         tl = 0.;
-        X = x;
+        X = 0;
         coef = x;
     }
 
@@ -40,23 +40,23 @@ public class Integrator extends Component{
         }
         else if (current == 2){
             current = 1;
-            return;
         }
+        return;
     }
 
     public void extern(Event ev) {
-        if ((current == 1) && (ev.get_str("Derivative"))) {
-            coef = ev.val("Derivative");
+        if ((current == 1) && (ev.get_str("Adder"))) {
             X += step*coef;
-            //System.out.print("E : instant " + e + " le couple x,c = " + X + "," + coef + "\n");
+            coef = ev.val("Adder");
+            System.out.print("E : instant " + e + " le couple x,c = " + X + "," + coef + "\n");
             current = 2;
-            ev.set("Derivative",Boolean.FALSE);
+            ev.set("Adder",Boolean.FALSE);
         }
     }
 
     public void output(Event ev) {
         if (current == 2){
-            ev.transmit("X",X);
+            ev.transmit("Derivative",X);
         }
     }
 

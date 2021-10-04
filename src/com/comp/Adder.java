@@ -33,27 +33,45 @@ public class Adder extends Component{
         if(current == 1){
             tr = Double.POSITIVE_INFINITY;
         }
-    }
-
-    public void intern(Event ev) {
-        if((current == 1)&&(ev.get_str("Adder"))){
-            sum += ev.val("Adder");
-            //ev.transmit("Derivative",sum);
-            //System.out.print("Sum : " + sum + "\n");
+        else {
+            tr = 0.;
         }
     }
 
+    public void intern(Event ev) {
+        if(current == 2){
+            current = 1;
+        }
+        return;
+    }
+
     public void extern(Event ev) {
-        if((current == 1)&&(ev.get_str("Adder"))){
-            sum += ev.val("Adder");
-            ev.transmit("Derivative",sum);
-            System.out.print("Sum2 : " + sum + "\n");
-            ev.set("Adder",Boolean.FALSE);
+        if((current == 1)&&(ev.get_str("Step1"))){
+            sum += ev.val("Step1");
+            ev.set("Step1",Boolean.FALSE);
+            current = 2;
+        }
+        else if((current == 1)&&(ev.get_str("Step2"))){
+            sum += ev.val("Step2");
+            ev.set("Step2",Boolean.FALSE);
+            current = 2;
+        }
+        else if((current == 1)&&(ev.get_str("Step3"))){
+            sum += ev.val("Step3");
+            ev.set("Step3",Boolean.FALSE);
+            current = 2;
+        }
+        else if((current == 1)&&(ev.get_str("Step4"))){
+            sum += ev.val("Step4");
+            ev.set("Step4",Boolean.FALSE);
+            current = 2;
         }
     }
 
     public void output(Event ev) {
-        ev.transmit("Sum",sum);
+        if(current == 2){
+            ev.transmit("Adder",sum);
+        }
     }
 
     public double time() {
