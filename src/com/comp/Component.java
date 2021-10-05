@@ -32,17 +32,17 @@ public abstract class Component {
         e = E;
     }
 
-
-    public void set_tn(){
-        if(e>=tn){
-            tn = tl + ta;
-        }
+    public double get_tl(){
+        return tl;
     }
 
-    public void set_tl(){
-        if(e>=tn) {
-            tl = tn;
-        }
+
+    public void set_tn(double t){
+        tn = t;
+    }
+
+    public void set_tl(double t){
+        tl = t;
     }
 
     public Double get_tn(){
@@ -72,4 +72,8 @@ public abstract class Component {
     abstract public double time();
 
     abstract public void conflict(Event ev);
+
+    public double get_e(){
+        return e;
+    }
 }

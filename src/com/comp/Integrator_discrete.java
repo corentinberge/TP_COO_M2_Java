@@ -33,7 +33,7 @@ public class Integrator_discrete extends Component{
         current = 1;
         e = 0.;
         tl = 0.;
-        X = 0;
+        X = x;
         coef = co;
         ti = 0.;
         step = st;
@@ -42,12 +42,24 @@ public class Integrator_discrete extends Component{
         tn = step;
     }
 
+    public Integrator_discrete(String n, int[] s, int c, double t, double x,double co,double st,double d){
+        name = n;
+        S = s;
+        current = 1;
+        e = 0.;
+        tl = 0.;
+        X = x;
+        coef = co;
+        ti = 0.;
+        step = st;
+        tr = step;
+        ta = step;
+        tn = step;
+        delta = d;
+    }
+
     public void set_tr(Double t) {
-        if (current == 1) {
-            tr = step;
-        } else {
-            tr = 0.;
-        }
+        tr = t;
     }
 
     public void intern(Event ev) {
@@ -105,6 +117,11 @@ public class Integrator_discrete extends Component{
     public void output(Event ev) {
         if(current == 2){
             ev.transmit(name,X);
+            if((this.name == "Derivative_2") && (X<0)){
+                ev.set("Neg",Boolean.TRUE);
+                X = 0;
+                tr = Double.POSITIVE_INFINITY;
+            }
         }
     }
 
@@ -116,7 +133,8 @@ public class Integrator_discrete extends Component{
     }
 
     public void conflict(Event ev) {
-        extern(ev);
+        intern(ev);
+        //extern(ev);
         return;
     }
 
@@ -125,4 +143,7 @@ public class Integrator_discrete extends Component{
     }
 
     public double get_coef(){return coef;}
+
+    public double get_delta(){return delta;}
+
 }

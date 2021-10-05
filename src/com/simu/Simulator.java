@@ -24,7 +24,7 @@ public class Simulator {
         t_fin = 20;
     }
 
-    public void ordonnanceur(){
+    /*public void ordonnanceur(){
         List<Component> Comp = new ArrayList<Component>();
         Generator g;
         Buffer b;
@@ -48,9 +48,9 @@ public class Simulator {
 
         afficheur_ordo(b,g,p,ev);
 
-        /*ChartFrame cf = new ChartFrame("Résultat","GBP");
+        ChartFrame cf = new ChartFrame("Résultat","GBP");
         Chart Cq = new Chart("q");
-        cf.addToLineChartPane(Cq);*/
+        cf.addToLineChartPane(Cq);
 
         while(t<t_fin){
             //Local variable
@@ -126,9 +126,9 @@ public class Simulator {
                     Comp.get(i).set_e(t);
                 }
             }
-            /*afficheur_ordo(b,g,p,ev);
+            afficheur_ordo(b,g,p,ev);
             Cq.addDataToSeries(t,b.get_q());
-            ev.reset();*/
+            ev.reset();
         }
     }
 
@@ -635,12 +635,14 @@ public class Simulator {
 
             //ev.reset();
         }
-    }
+    }*/
 
-    public void BB(){//Initialisation
+    public void BB(){
+        Boolean B = Boolean.TRUE;
         List<Component> Comp = new ArrayList<Component>();
         Double res;Double X_t;
         Constante Cons = new Constante("Cons",-9.81);
+        Comparator Com = new Comparator("C1",1,Double.POSITIVE_INFINITY);
 
         int[] list_A;
         list_A = new int[2];list_A[0] = 1;list_A[1] = 2;
@@ -650,6 +652,8 @@ public class Simulator {
         ev.add("Derivative_1",Boolean.FALSE);
         ev.add("Derivative_2",Boolean.FALSE);
         ev.add("Adder",Boolean.FALSE);
+        ev.add("Neg",Boolean.FALSE);
+        ev.add("change",Boolean.FALSE);
 
         ChartFrame cf = new ChartFrame("Résultat","Discrete intégrator");
         Chart Sum = new Chart("I1");
@@ -658,12 +662,17 @@ public class Simulator {
         cf.addToLineChartPane(X);
 
         Cons.init(ev);
-        Integrator_discrete I1 = new Integrator_discrete("Derivative_1",list_A,1,Double.POSITIVE_INFINITY,0,0,Double.POSITIVE_INFINITY);
-        Integrator_discrete I2 = new Integrator_discrete("Derivative_2",list_A,1,Double.POSITIVE_INFINITY,10,0,Double.POSITIVE_INFINITY);
+        //double st1 = Math.abs(-9.81/0.01);
+        Integrator_discrete2 I1 = new Integrator_discrete2("Derivative_1",list_A,1,Double.POSITIVE_INFINITY,0,0,Double.POSITIVE_INFINITY,0.01);
 
-        Comp.add(0,Cons);Comp.add(1,I1);Comp.add(2,I2);
+        //double st2 = Math.abs(I1.get_X()/st1);
+        Integrator_discrete I2 = new Integrator_discrete("Derivative_2",list_A,1,Double.POSITIVE_INFINITY,10,0,Double.POSITIVE_INFINITY,0.01);
 
-        while(t<1){
+
+
+        Comp.add(0,Cons);Comp.add(1,I1);Comp.add(2,I2);Comp.add(3,Com);
+
+        while(t<5){
             //Local variable
             List<Component> imms = new ArrayList<Component>();
             List<Component> ins = new ArrayList<Component>();
@@ -682,8 +691,8 @@ public class Simulator {
 
             //Setting minimum time for all component
             for(int i = 0;i<Comp.size();i++){
-                Comp.get(i).set_e(t);
-                Comp.get(i).set_tr(tr_min);
+                Comp.get(i).set_e(t - Comp.get(i).get_tl());
+                Comp.get(i).set_tr(Comp.get(i).time() - Comp.get(i).get_e());
             }
 
             //Making the output function for imms (lambda)
@@ -692,11 +701,14 @@ public class Simulator {
             }
 
             //Adding component who can change with output
-            if(ev.get_str("Cons")){
+            if(ev.get_str("Cons") || (ev.get_str("change"))){
                 ins.add(ins.size(),I1);
             }
             if(ev.get_str("Derivative_1")){
                 ins.add(ins.size(),I2);
+            }
+            if(ev.get_str("Neg")){
+                ins.add(ins.size(),Com);
             }
 
 
@@ -714,33 +726,36 @@ public class Simulator {
                 }
                 if(in_imms && !in_ins){
                     Comp.get(i).intern(ev);
-                    Comp.get(i).set_tl();
-                    Comp.get(i).set_tn();
-                    Comp.get(i).set_tr(t);
-                    Comp.get(i).set_e(t);
+                    Comp.get(i).set_e(0);
+                    Comp.get(i).set_tl(t);
+                    Comp.get(i).set_tn(Comp.get(i).get_tl() + Comp.get(i).get_e());
+                    Comp.get(i).set_tr(Comp.get(i).time() - Comp.get(i).get_e());
                 }
                 else if(!in_imms && in_ins){
                     Comp.get(i).extern(ev);
-                    Comp.get(i).set_tl();
-                    Comp.get(i).set_tn();
-                    Comp.get(i).set_tr(t);
-                    Comp.get(i).set_e(t);
+                    Comp.get(i).set_e(0);
+                    Comp.get(i).set_tl(t);
+                    Comp.get(i).set_tn(Comp.get(i).get_tl() + Comp.get(i).get_e());
+                    Comp.get(i).set_tr(Comp.get(i).time() - Comp.get(i).get_e());
                 }
                 else if(in_imms && in_ins){
                     Comp.get(i).conflict(ev);
-                    Comp.get(i).set_tl();
-                    Comp.get(i).set_tn();
-                    Comp.get(i).set_tr(t);
-                    Comp.get(i).set_e(t);
+                    Comp.get(i).set_e(0);
+                    Comp.get(i).set_tl(t);
+                    Comp.get(i).set_tn(Comp.get(i).get_tl() + Comp.get(i).get_e());
+                    Comp.get(i).set_tr(Comp.get(i).time() - Comp.get(i).get_e());
                 }
             }
-            System.out.print("T : "+ t + "\t I1 : " + I1.get_X() + "\t I2 : " + I2.get_X() + "\n\n");
+            System.out.print("T : "+ t + "\t I1 : " + I1.get_X() + "\t I2 : " + I2.get_X() + "\n");
+            System.out.print("T : "+ t + "\t I1 : " + I1.get_current() + "\t I2 : " + I2.get_current() +  "\t Comp : " + Com.get_current() + "\n");
+            System.out.print("I1 : " + I1.get_tr() + " " + I1.get_coef() + " " + I1.get_delta() + "\n");
+            System.out.print("I2 : " + I2.get_tr() + " " + I2.get_coef() + " " + I2.get_delta() + "\n");
+            System.out.print("Trmin : " + tr_min + "\n\n");
             //Sum.addDataToSeries(t,ad.get_sum());
             if (t != Double.POSITIVE_INFINITY){
                 Sum.addDataToSeries(t,I1.get_X());
                 X.addDataToSeries(t,I2.get_X());
             }
-
             //ev.reset();
         }
     }
