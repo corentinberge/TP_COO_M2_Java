@@ -631,7 +631,7 @@ public class Simulator {
 
         //Initialize Constante and Comparator
         Constante Cons = new Constante("Cons",-9.81);
-        Comparator Com = new Comparator("C1",1,Double.POSITIVE_INFINITY);
+        Connector Com = new Connector("C1",1,Double.POSITIVE_INFINITY);
 
         //Initialize Events
         Event ev = new Event();
