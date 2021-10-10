@@ -10,42 +10,23 @@ public class Integrator_discrete extends Component{
     private double step;
     private double delta = 0.1;
 
-    public Integrator_discrete(){}
-
-    public Integrator_discrete(String n, int[] s, int c, double t, double x,double co){
+    public Integrator_discrete(String n, int c, double x,double co,double st){
         name = n;
-        S = s;
-        current = 1;
-        e = 0.;
-        tl = 0.;
-        X = 0;
-        coef = co;
-        ti = 0.;
-        step = Math.abs(delta/Math.abs(coef));
-        tr = step;
-        ta = step;
-        tn = step;
-    }
-
-    public Integrator_discrete(String n, int[] s, int c, double t, double x,double co,double st){
-        name = n;
-        S = s;
-        current = 1;
+        current = c;
         e = 0.;
         tl = 0.;
         X = x;
         coef = co;
         ti = 0.;
         step = st;
-        tr = step;
-        ta = step;
-        tn = step;
+        tr = st;
+        ta = st;
+        tn = st;
     }
 
-    public Integrator_discrete(String n, int[] s, int c, double t, double x,double co,double st,double d){
+    public Integrator_discrete(String n, int c, double x,double co,double st,double d){
         name = n;
-        S = s;
-        current = 1;
+        current = c;
         e = 0.;
         tl = 0.;
         X = x;
@@ -58,15 +39,12 @@ public class Integrator_discrete extends Component{
         delta = d;
     }
 
-    public void set_tr(Double t) {
-        tr = t;
-    }
-
     public void intern(Event ev) {
         if(current == 1){
             X += step*coef;
-            current = 2;
-            ev.transmit(name,X);
+            if(X >= 0){
+                current = 2;
+            }
         }
         else if(current == 2){
             current = 1;
@@ -102,13 +80,12 @@ public class Integrator_discrete extends Component{
                 step = Double.POSITIVE_INFINITY;
             }
             current = 2;
+
             ev.set("Derivative_1",Boolean.FALSE);
-            System.out.print("Je suis passé par ici ! \n");
         }
-        else if ((current == 1) && (ev.get_str("Cons"))) {
+        else if ((current == 1) && (ev.get_str("Cons")) && (this.name.equals("Derivative_1")) ) {
             coef = ev.val("Cons");
             step = Math.abs(delta / Math.abs(coef));
-            delta = delta * Math.signum(coef);
             current = 2;
             ev.set("Cons", Boolean.FALSE);
         }
@@ -117,7 +94,7 @@ public class Integrator_discrete extends Component{
     public void output(Event ev) {
         if(current == 2){
             ev.transmit(name,X);
-            if((this.name == "Derivative_2") && (X<0)){
+            if((this.name.equals("Derivative_2")) && (X<0) && !ev.get_str("Neg")){
                 ev.set("Neg",Boolean.TRUE);
                 X = 0;
                 tr = Double.POSITIVE_INFINITY;
@@ -134,16 +111,10 @@ public class Integrator_discrete extends Component{
 
     public void conflict(Event ev) {
         intern(ev);
-        //extern(ev);
-        return;
     }
 
     public double get_X(){
         return X;
     }
-
-    public double get_coef(){return coef;}
-
-    public double get_delta(){return delta;}
 
 }

@@ -8,19 +8,14 @@ public class Buffer extends Component {
     private int q = 0;
 
     //Functions
-    public Buffer(){}
-
-    public Buffer(String n, int[] s, int c, double t){
+    public Buffer(String n, int c, double t){
         super(n,t);
-        S = s;
         current = c;
         ta = 0;
     }
 
     public void intern(Event ev){
-        //System.out.print("Je suis passé ici !\n");
         if(current == 2){
-            //System.out.print("Je repasse par la !\n");
             q--;
             current = 3;
             tn = e + Double.POSITIVE_INFINITY;
@@ -67,14 +62,5 @@ public class Buffer extends Component {
 
     public int get_q(){
         return q;
-    }
-
-    public void set_tr(Double t){
-        if((current == 1) || (current == 3)){
-            tr = Double.POSITIVE_INFINITY;
-        }
-        else if(current == 2){
-            tr = tn - t;
-        }
     }
 }

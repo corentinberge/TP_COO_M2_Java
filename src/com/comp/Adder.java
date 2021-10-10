@@ -10,11 +10,8 @@ public class Adder extends Component{
     private Double sum = 0.;
 
     //Functions
-    public Adder(){}
-
-    public Adder(String n, int[] s, int c, double t){
+    public Adder(String n, int c, double t){
         name = n;
-        S = s;
         current = c;
         tr = t;
         ta = t;
@@ -24,17 +21,8 @@ public class Adder extends Component{
     }
 
     public void init(List<Step> s){
-        for(int i = 0;i<s.size();i++){
-            sum += s.get(i).get_xi();
-        }
-    }
-
-    public void set_tr(Double t) {
-        if(current == 1){
-            tr = Double.POSITIVE_INFINITY;
-        }
-        else {
-            tr = 0.;
+        for (Step step : s) {
+            sum += step.get_xi();
         }
     }
 
@@ -42,7 +30,6 @@ public class Adder extends Component{
         if(current == 2){
             current = 1;
         }
-        return;
     }
 
     public void extern(Event ev) {
@@ -81,9 +68,7 @@ public class Adder extends Component{
         return 0.;
     }
 
-    public void conflict(Event ev) {
-        return ;
-    }
+    public void conflict(Event ev) {}
 
     public double get_sum(){
         return sum;

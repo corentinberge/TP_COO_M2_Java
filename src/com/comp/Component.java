@@ -9,7 +9,6 @@ public abstract class Component {
 
     //Attributes
     protected String name;
-    protected int[] S;
     protected int current;
     protected double ta;
     protected double e;
@@ -32,10 +31,9 @@ public abstract class Component {
         e = E;
     }
 
-    public double get_tl(){
-        return tl;
+    public void set_tr(Double t) {
+        tr = t;
     }
-
 
     public void set_tn(double t){
         tn = t;
@@ -45,23 +43,29 @@ public abstract class Component {
         tl = t;
     }
 
-    public Double get_tn(){
-        return tn;
-    }
-
-    public int get_current(){
-        return current;
+    public double get_e(){
+        return e;
     }
 
     public double get_tr(){
         return tr;
     }
 
+    public Double get_tn(){
+        return tn;
+    }
+
+    public double get_tl(){
+        return tl;
+    }
+
     public String get_name(){
         return name;
     }
 
-    abstract public void set_tr(Double t);
+    public int get_current(){
+        return current;
+    }
 
     abstract public void intern(Event ev);
 
@@ -72,8 +76,4 @@ public abstract class Component {
     abstract public double time();
 
     abstract public void conflict(Event ev);
-
-    public double get_e(){
-        return e;
-    }
 }

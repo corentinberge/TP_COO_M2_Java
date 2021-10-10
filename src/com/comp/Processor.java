@@ -8,11 +8,8 @@ public class Processor extends Component {
     private int c = 0;
 
     //Functions
-    public Processor(){}
-
-    public Processor(String n, int[] s, int c, double t){
+    public Processor(String n, int c, double t){
         super(n,t);
-        S = s;
         current = c;
         ta = 3;
     }
@@ -34,9 +31,6 @@ public class Processor extends Component {
     public double time(){
         if (current == 1){
             return Double.POSITIVE_INFINITY;
-        }
-        else if (current == 2){
-            return tr;
         }
         return 0.;
     }
@@ -62,14 +56,5 @@ public class Processor extends Component {
 
     public String get_name(){
         return name;
-    }
-
-    public void set_tr(Double t){
-        if(current == 1){
-            tr = Double.POSITIVE_INFINITY;
-        }
-        else if(current == 2){
-            tr = tn - t;
-        }
     }
 }

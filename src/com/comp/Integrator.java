@@ -4,16 +4,16 @@ import com.evenement.Event;
 
 public class Integrator extends Component{
 
-    private double step = 0.01;
+    //Attributes
+    private double step;
     private double X;
     private double coef;
 
-    public Integrator(){};
-
-    public Integrator(String n, int[] s, int c, double t, double x){
+    //Functions
+    public Integrator(String n, int c, double t, double x){
         name = n;
-        S = s;
-        current = 1;
+        current = c;
+        step = t;
         tr = t;
         ta = t;
         tn = t;
@@ -41,7 +41,6 @@ public class Integrator extends Component{
         else if (current == 2){
             current = 1;
         }
-        return;
     }
 
     public void extern(Event ev) {
@@ -62,14 +61,12 @@ public class Integrator extends Component{
 
     public double time() {
         if(current == 1){
-            return tr;
+            return step;
         }
         return 0.;
     }
 
-    public void conflict(Event ev) {
-        return;
-    }
+    public void conflict(Event ev) {}
 
     public double get_X(){
         return X;

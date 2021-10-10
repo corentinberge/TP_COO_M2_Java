@@ -8,18 +8,11 @@ public class Constante extends Component {
     private double x;
 
     //Functions
-    public Constante(){}
-
     public Constante(String n, double X){
         name = n;
         x = X;
         tr = 0.;
     }
-
-    public void init(Event ev){
-        output(ev);
-    }
-
 
     public void set_tr(Double t) {
         if(current == 1){
@@ -38,7 +31,6 @@ public class Constante extends Component {
         if(current == 1){
             current = 2;
         }
-        return;
     }
 
     public void output(Event ev) {
@@ -46,14 +38,11 @@ public class Constante extends Component {
     }
 
     public double time() {
-        return 0;
+        if(current == 1){
+            return 0;
+        }
+        return Double.POSITIVE_INFINITY;
     }
 
-    public void conflict(Event ev) {
-        return;
-    }
-
-    public double get_x(){
-        return x;
-    }
+    public void conflict(Event ev) {}
 }

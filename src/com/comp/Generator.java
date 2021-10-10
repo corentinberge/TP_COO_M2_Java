@@ -7,25 +7,18 @@ import java.util.List;
 public class Generator extends Component {
 
     //Functions
-    public Generator(){}
-
-    public Generator(String n, int[] s, int c, double t){
+    public Generator(String n, int c, double t){
         super(n,t);
-        S = s;
         current = c;
         ta = 2;
     }
 
-    public void intern(Event ev){
-        return ;
-    }
+    public void intern(Event ev){}
 
-    public void extern(Event ev){
-        return ;
-    }
+    public void extern(Event ev){}
 
     public double time(){
-        return ta;
+        return 2.;
     }
 
     public void output(Event ev){
@@ -36,11 +29,5 @@ public class Generator extends Component {
         return name;
     }
 
-    public void conflict(Event ev){
-        return;
-    }
-
-    public void set_tr(Double t){
-        tr = tn - t;
-    }
+    public void conflict(Event ev){}
 }

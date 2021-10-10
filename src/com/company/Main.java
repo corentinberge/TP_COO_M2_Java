@@ -13,7 +13,7 @@ public class Main {
         //System.out.print("Menu principal, rentrez un chiffre pour simuler :\n1- RGB\n2- consigne\n");
 
 
-        Simulator s = new Simulator(10);
+        Simulator s = new Simulator();
 
         //s.ordonnanceur();
 
